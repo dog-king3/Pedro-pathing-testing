@@ -34,4 +34,8 @@ public class ArvinServo extends LinearOpMode {
             telemetry.update();
         }
     }
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes

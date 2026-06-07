@@ -39,4 +39,8 @@ public class ArvinMotor extends LinearOpMode {
             }
         }
     }
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes
