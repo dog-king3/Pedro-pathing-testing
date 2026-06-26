@@ -8,48 +8,47 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name = "TurnRight", group = "Autonomous")
+@Autonomous(name = "4: Turn Sequence", group = "Simple Auto")
 public class TurnRight extends LinearOpMode {
     private Follower follower;
 
     @Override
     public void runOpMode() {
         follower = Constants.createFollower(hardwareMap);
+        follower.setMaxPower(0.4);
 
-        Pose startPose = new Pose(0, 0, 0);
-        Pose endPose = new Pose(0, 48, 0);
-
-        follower.setStartingPose(startPose);
-
-        Path strafeRight = new Path(new BezierLine(startPose, endPose));
-
-        strafeRight.setConstantHeadingInterpolation(0);
-
-        telemetry.addLine("Backward 48 in");
-        telemetry.update();
+        Pose p0 = new Pose(0, 0, 0);
+        follower.setStartingPose(p0);
 
         waitForStart();
-
         if (isStopRequested()) return;
 
-        follower.followPath(strafeRight);
+        Pose p1 = new Pose(8, 0, Math.toRadians(-90));
+        Path path1 = new Path(new BezierLine(p0, p1));
+        path1.setLinearHeadingInterpolation(0, Math.toRadians(-90));
+        follower.followPath(path1, true);
+        while (opModeIsActive() && follower.isBusy()) { follower.update(); }
 
-        while (opModeIsActive() && follower.isBusy()) {
-            follower.update();
+        Pose p2 = new Pose(16, 0, Math.toRadians(-180));
+        Path path2 = new Path(new BezierLine(p1, p2));
+        path2.setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(-180));
+        follower.followPath(path2, true);
+        while (opModeIsActive() && follower.isBusy()) { follower.update(); }
 
-            telemetry.addData("X Position", follower.getPose().getX());
-            telemetry.addData("Y Position", follower.getPose().getY());
-            telemetry.addData("Heading (Deg)", Math.toDegrees(follower.getPose().getHeading()));
-            telemetry.update();
-        }
+        Pose p3 = new Pose(24, 0, Math.toRadians(-270));
+        Path path3 = new Path(new BezierLine(p2, p3));
+        path3.setLinearHeadingInterpolation(Math.toRadians(-180), Math.toRadians(-270));
+        follower.followPath(path3, true);
+        while (opModeIsActive() && follower.isBusy()) { follower.update(); }
 
-        telemetry.addLine("Path Complete!");
-        telemetry.update();
+        Pose p4 = new Pose(32, 0, Math.toRadians(-360));
+        Path path4 = new Path(new BezierLine(p3, p4));
+        path4.setLinearHeadingInterpolation(Math.toRadians(-270), Math.toRadians(-360));
+        follower.followPath(path4, true);
+        while (opModeIsActive() && follower.isBusy()) { follower.update(); }
 
         while (opModeIsActive()) {
             follower.update();
-            telemetry.addData("Final X", follower.getPose().getX());
-            telemetry.addData("Final Y", follower.getPose().getY());
             telemetry.addData("Final Heading", Math.toDegrees(follower.getPose().getHeading()));
             telemetry.update();
         }
