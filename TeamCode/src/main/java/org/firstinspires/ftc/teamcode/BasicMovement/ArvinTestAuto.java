@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.BasicMovement;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+@Disabled
 @Autonomous(name = "ArvinTestAuto", group = "MotorTests")
 
 public class ArvinTestAuto extends LinearOpMode {

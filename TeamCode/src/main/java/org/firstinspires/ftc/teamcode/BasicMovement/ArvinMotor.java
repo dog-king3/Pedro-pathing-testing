@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.BasicMovement;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+@Disabled
 @TeleOp(name = "ArvinMotor", group = "MotorTests") //don't forget to rename
 
 public class ArvinMotor extends LinearOpMode {
