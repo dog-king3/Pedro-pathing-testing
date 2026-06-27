@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.configs.HardwareConfig;
 import org.firstinspires.ftc.teamcode.configs.ShooterConfig;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name = "SmallRedSimple", group = "Auto")
+@Autonomous(name = "SmallRedSimple", group = "Autonomous")
 public class SmallRedSimple extends LinearOpMode {
 
     private Follower follower;
@@ -56,19 +56,19 @@ public class SmallRedSimple extends LinearOpMode {
                 .build();
     }
 
-    // Ivy Command representing the "ShooterAndFeederCombined" RR logic
+    //Shooter and feeder combined into one code action
     public Command combinedShootLogic() {
         return sequential(
-                // 1. Spin up shooter using config value
-                instant(() -> shooter.setVelocity(ShooterConfig.SHOOTER_VEL)),
+                //Spin up shooter using config value
+                instant(() -> shooter.setVelocity(ShooterConfig.SHOOTER_VEL_LONG)),
                 
-                // 2. Wait for motor to reach speed (START_WAIT_TIME)
+                //Wait for motor to reach speed (START_WAIT_TIME)
                 waitMs((long)(ShooterConfig.START_WAIT_TIME * 1000)),
                 
-                // 3. Start feeding the ball using SIDE_POWER config
+                //Start feeding the ball using SIDE_POWER config
                 instant(() -> feed.setPower(ShooterConfig.SIDE_POWER)),
 
-                // 4. Handoff Logic: Wait for ball to clear (HANDOFF_DISTANCE_MM)
+                // Wait for ball to clear (HANDOFF_DISTANCE_MM)
                 // When ball leaves, kick on intake and side servo to reload
                 waitUntil(() -> rangeSensor.getDistance(DistanceUnit.MM) > ShooterConfig.HANDOFF_DISTANCE_MM),
                 parallel(
@@ -76,10 +76,10 @@ public class SmallRedSimple extends LinearOpMode {
                         instant(() -> intake.setPower(ShooterConfig.INTAKE_POWER))
                 ),
 
-                // 5. Wait for the remainder of the shot duration (WAIT_TIME)
+                // Wait for the remainder of the shot duration (WAIT_TIME)
                 waitMs((long)((ShooterConfig.WAIT_TIME - ShooterConfig.START_WAIT_TIME) * 1000)),
 
-                // 6. Stop all motors
+                // Stop all motors
                 instant(() -> {
                     feed.setPower(0);
                     shooter.setVelocity(0);
@@ -117,7 +117,7 @@ public class SmallRedSimple extends LinearOpMode {
         buildPaths();
         follower.setStartingPose(startPose);
 
-        telemetry.addLine("SmallRedSimple (Pedro/Ivy Version) Ready.");
+        telemetry.addLine("SmallRedSimple Ready.");
         telemetry.update();
 
         waitForStart();
