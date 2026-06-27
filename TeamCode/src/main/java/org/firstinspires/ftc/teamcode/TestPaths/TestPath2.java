@@ -1,30 +1,37 @@
-package org.firstinspires.ftc.teamcode;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.draw;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.follower;
+package org.firstinspires.ftc.teamcode.TestPaths;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.bylazar.configurables.annotations.Configurable;
-import com.bylazar.telemetry.TelemetryManager;
 import com.bylazar.telemetry.PanelsTelemetry;
-import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import com.bylazar.telemetry.TelemetryManager;
+import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
-import com.pedropathing.follower.Follower;
-import com.pedropathing.paths.PathChain;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.ivy.Command;
+import com.pedropathing.ivy.Scheduler;
+import com.pedropathing.paths.PathChain;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-@Autonomous(name = "TestPath", group = "Autonomous")
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+
+@Autonomous(name = "TestPath2", group = "Autonomous")
 @Configurable // Panels
-public class TestPath extends OpMode {
+public class TestPath2 extends OpMode {
     private TelemetryManager panelsTelemetry; // Panels Telemetry instance
     public Follower follower; // Pedro Pathing follower instance
     private int pathState; // Current autonomous path state (state machine)
     private Paths paths; // Paths defined in the Paths class
 
+    DcMotorEx shooter;
+
+
 
     @Override
     public void init() {
+        shooter = (DcMotorEx) hardwareMap.get(DcMotor.class, "LaunchMotor");
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
         follower = Constants.createFollower(hardwareMap);
@@ -34,8 +41,15 @@ public class TestPath extends OpMode {
 
         panelsTelemetry.debug("Status", "Initialized");
         panelsTelemetry.update(telemetry);
+
     }
 
+
+    Command ShooterCommand = Command.build()
+            .setExecute(() -> shooter.setPower(0.5))
+            .setDone(() -> shooter.isOverCurrent())
+            .setEnd(endCondition -> shooter.setPower(0))
+            .requiring(shooter);
 
     @Override
     public void loop() {
@@ -48,6 +62,8 @@ public class TestPath extends OpMode {
         panelsTelemetry.debug("Y", follower.getPose().getY());
         panelsTelemetry.debug("Heading", follower.getPose().getHeading());
         panelsTelemetry.update(telemetry);
+        Scheduler.schedule(ShooterCommand);
+        Scheduler.execute();
     }
 
 
@@ -56,39 +72,19 @@ public class TestPath extends OpMode {
 
         public PathChain MainChain;
         public Paths(Follower follower) {
-           MainChain = follower.pathBuilder()
+            MainChain = follower.pathBuilder()
                     .addPath(
                             new BezierLine(
                                     new Pose(56.000, 8.000),
-                                    new Pose(56.066, 15.065)
+                                    new Pose(56.000, 36.000)
                             )
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(97))
+                    .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(180))
                     .addPath(
-                            new BezierLine(
-                                    new Pose(56.066, 15.065),
-                                    new Pose(48.515, 33.390)
-                            )
-                    )
-                    .setLinearHeadingInterpolation(Math.toRadians(97), Math.toRadians(180))
-                    .addPath(
-                            new BezierLine(
-                                    new Pose(48.515, 33.390),
-                                    new Pose(14.112, 34.898)
-                            )
-                    )
-                    .setConstantHeadingInterpolation(Math.toRadians(180))
-                    .addPath(
-                            new BezierLine(
-                                    new Pose(14.112, 34.898),
-                                    new Pose(55.672, 8.196)
-                            )
-                    )
-                    .setConstantHeadingInterpolation(Math.toRadians(97))
-                    .addPath(
-                            new BezierLine(
-                                    new Pose(55.672, 8.196),
-                                    new Pose(33.239, 8.812)
+                            new BezierCurve(
+                                    new Pose(56.000, 36.000),
+                                    new Pose(69.277, 35.133),
+                                    new Pose(94.192, 116.741)
                             )
                     )
                     .setTangentHeadingInterpolation()
@@ -107,6 +103,7 @@ public class TestPath extends OpMode {
     @Override
     public void start() {
         follower.followPath(paths.MainChain);
+
     }
 
 }

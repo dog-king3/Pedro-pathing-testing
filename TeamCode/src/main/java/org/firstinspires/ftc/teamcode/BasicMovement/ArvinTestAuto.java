@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ArvinMotorAndServo;
+package org.firstinspires.ftc.teamcode.BasicMovement;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
